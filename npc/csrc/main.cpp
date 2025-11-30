@@ -7,6 +7,12 @@
 
 void nvboard_bind_all_pins(Vtop* top);
 
+static void single_cycle(Vtop* top){
+	top->clk = 0;top->eval(); 
+	top->clk = 1;top->eval(); 
+}
+
+
 int main(int argc, char** argv) {
     VerilatedContext* contextp = new VerilatedContext;
     contextp->commandArgs(argc, argv);
@@ -18,7 +24,7 @@ int main(int argc, char** argv) {
 
     while (true) {
 	nvboard_update();
-	top->eval();
+	single_cycle(top);
     }
     delete top;
     delete contextp;
