@@ -1,15 +1,12 @@
 module top(
-  input clk,
-  input rst,
-  output reg [15:0] led
+  input [7:0] in,
+  input       en,
+  output      sign,
+  output [2:0] binary_out,
+  output [7:0] led
 );
-  reg [31:0] count;
-  always @(posedge clk) begin
-    if (rst) begin led <= 1; count <= 0; end
-    else begin
-      if (count == 0) led <= {led[14:0], led[15]};
-      count <= (count >= 5000000 ? 32'b0 : count + 1);
-    end
-  end
-endmodule
 
+  p_encoder pri(in, en ,sign, binary_out);
+  bcd7seg bcd({1'b0, binary_out}, led);
+
+endmodule

@@ -7,10 +7,12 @@
 
 void nvboard_bind_all_pins(Vtop* top);
 
+/*
 static void single_cycle(Vtop* top){
 	top->clk = 0;top->eval(); 
 	top->clk = 1;top->eval(); 
 }
+*/
 
 
 int main(int argc, char** argv) {
@@ -23,8 +25,9 @@ int main(int argc, char** argv) {
     nvboard_init();
 
     while (true) {
-	nvboard_update();
-	single_cycle(top);
+        nvboard_update();
+        top->eval();
+        //single_cycle(top);
     }
     delete top;
     delete contextp;
