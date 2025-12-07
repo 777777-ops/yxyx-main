@@ -9,7 +9,7 @@ BUILD_DIR = ./build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOP_NAME)
 
-default: build $(BIN)
+default:build $(BIN)
 	
 #自动链接引脚脚本(可选)
 NXDC_FILES = vsrc/top.nxdc
@@ -28,14 +28,25 @@ CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOP_NAME)\""
 
 include $(NVBOARD_HOME)/scripts/nvboard.mk
 
-all: default
+all: build default 
 
+#Verilator仿真验证
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR)
 	$(VERILATOR) $(VERILATOR_FLAGS) \
 		--top-module $(TOP_NAME) $^ \
 		$(addprefix -CFLAGS , $(CXXFLAGS)) $(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--Mdir $(OBJ_DIR) --exe -o $(abspath $(BIN))
+
+YOSYS_RESULT = $(BUILD_DIR)/yosys_$(TOP_NAME) 
+#使用yosys综合RTL文件,这里的开源PDK是(ICsprout55)
+yosys: build $(VSRCS)
+	mkdir -p $(YOSYS_RESULT)
+	make -C ~/ysyxx/yosys-sta sta \
+	DESIGN=$(TOP_NAME) \
+	CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(abspath $(YOSYS_RESULT)) \
+	RTL_FILES="$(VSRCS)"
+
 
 build:
 	mkdir -p build
@@ -46,4 +57,4 @@ run: $(BIN)
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all default build
+.PHONY: all default build yosys
