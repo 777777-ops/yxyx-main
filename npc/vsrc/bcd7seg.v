@@ -1,3 +1,4 @@
+//二进制4位的7位数码管()
 module bcd7seg(
   input  [3:0] b,
   output reg [7:0] h
@@ -12,8 +13,8 @@ module bcd7seg(
       4'h5: h = ~(8'b10110110); 
       4'h6: h = ~(8'b10111110); 
       4'h7: h = ~(8'b11100000);
+      4'h8: h = ~(8'b11111111);
       /* 
-      4'h8: h = 7'b1111111; 
       4'h9: h = 7'b1101111;  
       4'hA: h = 7'b1110111;  
       4'hB: h = 7'b1111100;  
@@ -22,11 +23,11 @@ module bcd7seg(
       4'hE: h = 7'b1111001;  
       4'hF: h = 7'b1110001;  
       */
-      default: h = 8'b00000000; 
+      default: h = 8'b00000010; 
     endcase
   end
-  
 endmodule
+
 
 
 
