@@ -5,7 +5,6 @@
 #include <assert.h>
 #include <nvboard.h>
 
-size_t arr[255]{0};
 
 void nvboard_bind_all_pins(Vtop* top);
 
@@ -28,9 +27,6 @@ int main(int argc, char** argv) {
     while (true) {
         nvboard_update();
         single_cycle(top);
-        printf("%d = %d,arr[%d] = %ld\n",i,top->led,top->led,arr[top->led]);
-        arr[top->led] ++; i++;
-        if(i == 511) break;
     }
     delete top;
     delete contextp;
